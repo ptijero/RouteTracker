@@ -95,3 +95,47 @@ To learn more about React Native, take a look at the following resources:
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+
+
+About the project:
+# Route Tracker
+
+Aplicación móvil desarrollada en React Native para el seguimiento de rutas de técnicos en campo.
+
+## Tecnologías
+
+- React Native
+- TypeScript
+- React Navigation
+- Axios
+- Express
+- PostgreSQL
+- Prisma
+- AsyncStorage
+- React Native Maps
+
+## Arquitectura
+
+Presentación
+↓
+Hooks
+↓
+Services
+↓
+API
+↓
+Backend
+
+## Instalación
+
+npm install
+
+npx react-native run-android
+
+## Funcionalidades
+
+- Login JWT
+- Visualización de rutas
+- Offline First
+- Sincronización automática
+- GPS en tiempo real
