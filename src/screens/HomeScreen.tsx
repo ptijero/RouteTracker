@@ -1,60 +1,112 @@
-import {View, Text, Button, ActivityIndicator, FlatList, ListRenderItem} from "react-native";
-import {Alert} from "react-native";
-import {NativeStackScreenProps} from "@react-navigation/native-stack";
-import {RootStackParamList} from "../navigation/types.ts";
-import useUsers from "../hooks/useUsers.ts";
-import UserCard from "../components/UserCard.tsx";
-import {useEffect} from "react";
-type Props= NativeStackScreenProps<RootStackParamList,'Home'>;
+import {
+    View,
+    Text,
+    ActivityIndicator,
+    FlatList,
+    Alert,
+    TextInput
+} from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../navigation/types";
+import useUsers from "../hooks/useUsers";
+import UserCard from "../components/userCard/UserCard.tsx";
+import { useEffect, useState } from "react";
+import styles from "../styles/HomeStyle";
+import {User} from "../models/User.ts";
+import useNetworkStatus from "../hooks/useNetworkStatus.ts";
 
-export default function HomeScreen({ navigation }:Props) {
+type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
-    const {users, loading, error } = useUsers()
+export default function HomeScreen({ navigation }: Props) {
 
-    function getDetail(id:number) {
-        navigation.navigate("Detail", {userId: id})
+    const { users, loading, error } = useUsers();
+    const [usersView, setUsersView] = useState<User[]>([]);
+    const [search, setSearch] = useState<string>("");
+    function getDetail(id: number) {
+        navigation.navigate("Detail", { userId: id });
     }
 
-    useEffect(()=>{
+    const isOnline = useNetworkStatus();
 
-        if(error){
+    useEffect(() => {
 
-            Alert.alert(error);
-
+        if (error) {
+            Alert.alert("Error", error);
         }
 
-    },[error]);
+    }, [error]);
 
-    if (loading){
-        return <ActivityIndicator size="large"/>;
+    useEffect(() => {
+        setUsersView(users);
+    }, [users]);
+
+    useEffect(() => {
+        const result = users.filter(user => user.name.toLowerCase().includes(search.toLowerCase()));
+        if (result.length > 0 && search != ""){
+            setUsersView(result);
+        } else if (result.length == 0 && search != "") {
+            setUsersView([]);
+        } else {
+            setUsersView(users);
+        }
+    }, [search]);
+
+    if (loading) {
+        return (
+            <View style={styles.loading}>
+                <ActivityIndicator size="large" />
+            </View>
+        );
     }
+
     return (
 
-        <View>
-            <Text>Lista de Usuarios</Text>
-            <FlatList data={users} keyExtractor={(item)=>item.id.toString()} ListEmptyComponent={()=>(
+        <View style={styles.container}>
 
-                <Text>
+            <View style={styles.header}>
 
-                    No existen usuarios
-
+                <Text style={styles.title}>
+                    🚚 Route Tracker
                 </Text>
 
-            )} renderItem={({item})=>(
+                <Text style={styles.subtitle}>
+                    Clientes registrados {users.length}
+                </Text>
+                <Text style={{"color": "white", paddingTop: 15}}>
+                    {isOnline ? "🟢 Online" : "🔴 Offline"}
+                </Text>
+            </View>
 
-                <UserCard
+            <TextInput
+                placeholder="Buscar cliente..."
+                style={styles.search}
+                onChangeText={setSearch}
+                value={search}
+            />
 
-                    user={item}
+            {search != "" && usersView.length != 0 && <Text style={{margin: 5}} >{usersView.length} clientes encontrados.</Text>}
 
-                    onPress={getDetail}
+            <FlatList
+                data={usersView}
+                keyExtractor={(item) => item.id.toString()}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 20 }}
+                ListEmptyComponent={() => (
+                    <Text style={styles.empty}>
+                        No existen usuarios
+                    </Text>
+                )}
+                renderItem={({ item }) => (
 
-                />
+                    <UserCard
+                        user={item}
+                        onPress={getDetail}
+                    />
 
-            )}
+                )}
             />
 
         </View>
 
     );
-
 }

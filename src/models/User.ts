@@ -17,3 +17,27 @@ export interface User {
         };
     };
 }
+
+export const EMPTY_USER: User = {
+    id: 0,
+    name: "",
+    username: "",
+    email: "",
+    phone: "",
+    website: "",
+    company: {
+        name: "",
+        catchPhrase: "",
+        bs: "",
+    },
+    address: {
+        street: "",
+        suite: "",
+        city: "",
+        zipcode: "",
+        geo: {
+            lat: "0",
+            lng: "0",
+        },
+    },
+};
