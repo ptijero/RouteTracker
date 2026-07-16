@@ -4,7 +4,7 @@
  *
  * @format
  */
-
+import AppNavigator from "./src/navigation/AppNavigator.tsx";
 import { NewAppScreen } from '@react-native/new-app-screen';
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import {
@@ -13,14 +13,15 @@ import {
 } from 'react-native-safe-area-context';
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+  /*const isDarkMode = useColorScheme() === 'dark';
 
   return (
     <SafeAreaProvider>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <AppContent />
     </SafeAreaProvider>
-  );
+  );*/
+  return <AppNavigator />;
 }
 
 function AppContent() {
